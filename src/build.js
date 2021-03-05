@@ -21,7 +21,7 @@ const MESSAGE_TYPES = {
 }
 
 function messageHandler(gatsbyProcess, processors = {}) {
-  return async function(msg) {
+  return async function (msg) {
     if (
       log.getLevel() <= log.levels.TRACE &&
       msg.type !== MESSAGE_TYPES.LOG_ACTION
@@ -65,7 +65,7 @@ function messageHandler(gatsbyProcess, processors = {}) {
   }
 }
 
-exports.build = async function(cmd = `node_modules/.bin/gatsby build`) {
+exports.build = async function (cmd = `node_modules/.bin/gatsby build`) {
   log.setLevel(process.env.PARALLEL_RUNNER_LOG_LEVEL || `warn`)
 
   process.env.ENABLE_GATSBY_EXTERNAL_JOBS = true
@@ -86,7 +86,7 @@ exports.build = async function(cmd = `node_modules/.bin/gatsby build`) {
   )
 
   const [bin, ...args] = cmd.split(` `)
-  const gatsbyProcess = cp.fork(path.join(process.cwd(), bin), args)
+  const gatsbyProcess = cp.fork(path.join(process.cwd(), bin), args.concat(process.argv.slice(2)))
   gatsbyProcess.on(`exit`, async code => {
     log.debug(`Gatsby existed with`, code)
     process.exit(code)
